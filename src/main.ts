@@ -783,7 +783,7 @@ export default class LocalImagesPlugin extends Plugin {
 
               logError(el.link)
 
-              let newBinData: Buffer | null = null
+              let newBinData = null
               let newMD5: string | null = null
               const oldBinData = await readFromDiskB(pathJoin([this.app.vault.adapter.basePath, oldpath]), 5000)
               const oldMD5 = md5Sig(oldBinData)

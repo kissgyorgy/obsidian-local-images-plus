@@ -6,24 +6,6 @@ import Jimp from "jimp";
 import md5 from "crypto-js/md5";
 const fs2 = require('fs').promises;
 import fs from "fs";
- 
-
-// Jimp buffer package fix
-// https://github.com/Sergei-Korneev/obsidian-local-images-plus/issues/47
-
-
-Buffer.isBuffer = (e) => {
-  
-  return (
-    (e != null  && e != undefined) && ( 
-      (Object.getPrototypeOf(e) instanceof Uint8Array && typeof e.constructor.isBuffer == "function" )  
-    )
-    
-    )
-
-}
-
- 
 
 import {
   FORBIDDEN_SYMBOLS_FILENAME_PATTERN,
@@ -40,7 +22,7 @@ import {
   Notice,
   TFile
 } from "obsidian";
- 
+
 
 //import { TIMEOUT } from "dns";
 //import fs from "fs";
@@ -164,7 +146,7 @@ export async function replaceAsync(str: any, regex: Array<RegExp>, asyncFn: any)
   const data = await Promise.all(promises);
   logError("Promises: ");
   logError(data, true);
-  //  return str.replace((reg: RegExp, str: String) => { 
+  //  return str.replace((reg: RegExp, str: String) => {
 
   data.forEach((element) => {
 
@@ -220,10 +202,9 @@ export async function copyFromDisk(src: string, dest: string): Promise<null> {
 
 
 
-export async function pngToJpeg(buffer: ArrayBuffer, quality: number = 100): Promise<Buffer | null> {
-
-  let buf: Buffer | void
-  buf = await Jimp.read(Buffer.from(buffer, 0, buffer.byteLength))
+export async function pngToJpeg(buffer: ArrayBuffer, quality: number = 100): Promise<Uint8Array | null> {
+  let buf: Uint8Array | void
+  buf = await Jimp.read(new Uint8Array(buffer, 0, buffer.byteLength))
     .then(async (image) => {
 
       image
@@ -238,21 +219,17 @@ export async function pngToJpeg(buffer: ArrayBuffer, quality: number = 100): Pro
       return null
     });
 
-  if (buf instanceof Buffer) {
-    return buf;
-
-  } else {
-    return null
-  };
-
+  return buf || null;
 }
-
 
 
 export async function base64ToBuff(data: string): Promise<ArrayBuffer> {
   logError("base64ToBuff: \r\n", false);
   try {
-    const BufferData = Buffer.from(data.split("base64,")[1], 'base64');
+    const b64Data = data.split("base64,")[1];
+    const b64Decoded = atob(b64Data);
+    const encoder = new TextEncoder();
+    const BufferData = encoder.encode(b64Decoded);
     logError(BufferData);
     return BufferData;
   }
@@ -263,11 +240,10 @@ export async function base64ToBuff(data: string): Promise<ArrayBuffer> {
   }
 }
 
-export async function readFromDiskB(file: string, count: number = undefined): Promise<Buffer> {
+export async function readFromDiskB(file: string, count: number = undefined): Promise<Uint8Array> {
 
   try {
-
-    const buffer = Buffer.alloc(count);
+    const buffer = new Uint8Array(count);
     const fd: number = fs.openSync(file, "r+")
     fs.readSync(fd, buffer, 0, buffer.length, 0)
     logError(buffer)
@@ -289,7 +265,7 @@ export async function readFromDisk(file: string): Promise<ArrayBuffer> {
 
   try {
     const data = await fs2.readFile(file, null);
-    return Buffer.from(data);
+    return new Uint8Array(data);
   }
   catch (e) {
 
@@ -325,7 +301,7 @@ export async function getFileExt(content: ArrayBuffer, link: string) {
 
   // if XML, probably it is SVG
   if (fileExtByBuffer == "xml" || !fileExtByBuffer) {
-    const buffer = Buffer.from(content);
+    const buffer = new Uint8Array(content);
     if (isSvg(buffer)) return "svg";
   }
 
