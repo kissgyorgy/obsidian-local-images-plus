@@ -70,9 +70,6 @@ export interface ISettings {
   useMD5ForNewAtt: boolean;
   removeMediaFolder: boolean;
   removeOrphansCompl: boolean;
-  PngToJpeg: boolean;
-  PngToJpegLocal: boolean;
-  JpegQuality: number;
   DoNotCreateObsFolder: boolean
 }
 
@@ -96,8 +93,5 @@ export const DEFAULT_SETTINGS: ISettings = {
   useMD5ForNewAtt: true,
   removeMediaFolder: true,
   removeOrphansCompl: false,
-  PngToJpeg: false,
-  PngToJpegLocal: true,
-  JpegQuality: 80,
   DoNotCreateObsFolder: false
 };

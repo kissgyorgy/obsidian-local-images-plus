@@ -26,7 +26,6 @@ import {
   displayError,
   encObsURI,
   pathJoin,
-  pngToJpeg,
   getFileExt,
   readFromDiskB
 } from "./utils"
@@ -794,22 +793,7 @@ export default class LocalImagesPlugin extends Plugin {
               logError("oldext")
               logError(fileExt)
 
-              if (this.settings.PngToJpegLocal && fileExt == "png") {
-                logError("converting to Jpeg")
-                newBinData = await pngToJpeg(await this.app.vault.adapter.readBinary(oldpath), this.settings.JpegQuality)
-                newMD5 = md5Sig(newBinData)
-                logError(newBinData)
-                if (newBinData != null) {
-
-                  if (this.settings.useMD5ForNewAtt) {
-                    newpath = pathJoin([mdir, newMD5 + ".jpeg"])
-                  } else {
-                    newpath = pathJoin([mdir, cFileName(path.parse(el.link)?.name + ".jpeg")])
-                  }
-                  newlink = await getRDir(note, this.settings, newpath)
-                }
-
-              } else if (this.settings.useMD5ForNewAtt) {
+              if (this.settings.useMD5ForNewAtt) {
                 newpath = pathJoin([mdir, oldMD5 + path.extname(el.link)])
                 newlink = await getRDir(note, this.settings, newpath)
 

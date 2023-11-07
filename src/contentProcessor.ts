@@ -1,7 +1,7 @@
 import { URL } from "url";
 import path from "path";
-import { 
-  App, 
+import {
+  App,
   DataAdapter,
   TFile,
   Plugin
@@ -20,7 +20,6 @@ import {
   base64ToBuff,
   md5Sig,
   getFileExt,
-  pngToJpeg
 } from "./utils";
 
 import{
@@ -111,19 +110,14 @@ export function imageTagProcessor(app: Plugin,
     let fileExt = await getFileExt(fileData, parsedUrl.pathname);
    
 
-    if (fileExt == "png" && settings.PngToJpeg ) {
-      fileData = await pngToJpeg(fileData, settings.JpegQuality);
-      logError("arbuf: ")
-      logError(fileData)
-    }
-          const { fileName, needWrite } = await chooseFileName(
-            app.app.vault.adapter,
-            mediaDir,
-            link,
-            fileData,
-            settings
-          );
-          return {fileName, needWrite};
+    const { fileName, needWrite } = await chooseFileName(
+      app.app.vault.adapter,
+      mediaDir,
+      link,
+      fileData,
+      settings
+    );
+    return {fileName, needWrite};
     });
 
 

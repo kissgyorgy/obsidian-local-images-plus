@@ -201,28 +201,6 @@ export async function copyFromDisk(src: string, dest: string): Promise<null> {
 }
 
 
-
-export async function pngToJpeg(buffer: ArrayBuffer, quality: number = 100): Promise<Uint8Array | null> {
-  let buf: Uint8Array | void
-  buf = await Jimp.read(new Uint8Array(buffer, 0, buffer.byteLength))
-    .then(async (image) => {
-
-      image
-        .quality(quality) // set JPEG quality
-      //return buffer;
-      buf = (await image.getBufferAsync(Jimp.MIME_JPEG)); // save
-      return buf
-    })
-    .catch((e) => {
-      // Handle an exception.
-      logError("Cannot convert to jpeg: " + e, false);
-      return null
-    });
-
-  return buf || null;
-}
-
-
 export async function base64ToBuff(data: string): Promise<ArrayBuffer> {
   logError("base64ToBuff: \r\n", false);
   try {

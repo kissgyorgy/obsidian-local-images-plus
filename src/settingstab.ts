@@ -207,56 +207,6 @@ export default class SettingTab extends PluginSettingTab {
                         await this.plugin.saveSettings()
                     })
             )
-            new Setting(containerEl)
-            .setName("Convert PNG to JPEG (Web Images)")
-            .setDesc("Convert all downloaded PNG files to JPEG. May reduce file size by several times, but can also affect performance.")
-            .addToggle((toggle) =>
-                toggle
-                    .setValue(this.plugin.settings.PngToJpeg)
-                    .onChange(async (value) => {
-                        this.plugin.settings.PngToJpeg = value
-                        await this.plugin.saveSettings()
-                    })
-            )
-
-            new Setting(containerEl)
-            .setName("Convert PNG to JPEG (Pasted Images)")
-            .setDesc("Convert all pasted PNG files to JPEG. May reduce file size by several times, but can also affect performance.")
-            .addToggle((toggle) =>
-                toggle
-                    .setValue(this.plugin.settings.PngToJpegLocal)
-                    .onChange(async (value) => {
-                        this.plugin.settings.PngToJpegLocal = value
-                        await this.plugin.saveSettings()
-                    })
-            )
-
-
-            new Setting(containerEl)
-            .setName("Jpeg Quality")
-            .setDesc("Jpeg quality selection (30 to 100).")
-            .addText((text) =>
-                text
-                    .setValue(String(this.plugin.settings.JpegQuality))
-                    .onChange(async (value: string) => {
-
-                        let numberValue = Number(value)
-                        if (
-                            isNaN(numberValue) ||
-                            !Number.isInteger(numberValue) ||
-                            numberValue < 30 ||
-                            numberValue > 100
-                        ) {
-                            displayError(
-                                "The value should be a positive integer number between 30 and 100!"
-                            )
-                            return
-                        }
-                        this.plugin.settings.JpegQuality = numberValue
-                        await this.plugin.saveSettings()
-                    })
-            )
-
 
         new Setting(containerEl)
             .setName("File size lower limit in Kb")
